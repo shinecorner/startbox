@@ -1,0 +1,16 @@
+/*================================================================================
+NOTE:
+------
+PLACE HERE YOUR OWN CSS CODES.  */
+
+.brand-logo{
+	width: 60%;
+	height: auto;
+}
+.navbar-brand{
+	text-align: center;
+}
+
+.navbar-semi-dark .navbar-header {
+    background: #00b5b8
+}

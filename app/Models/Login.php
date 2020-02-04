@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Login extends Model
+{
+    protected $table = 'logins';
+    protected $guarded = ['id'];
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $casts = [];
+    public $timestamps = true;
+
+	use SoftDeletes;
+
+    /***************************************************************************************
+     ** RELATIONS
+     ***************************************************************************************/
+
+	public function organization()
+	{
+		return $this->belongsTo(Organization::class, 'organization_id');
+	}
+
+	public function facility()
+	{
+		return $this->belongsTo(Facility::class, 'facility_id');
+	}
+
+	public function user()
+	{
+		return $this->belongsTo(User::class, 'user_id');
+	}
+
+}
