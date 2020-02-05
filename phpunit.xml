@@ -12,24 +12,12 @@
          stopOnFailure="false">
     <testsuites>
 
-        <testsuite name="Client Feature">
-            <directory suffix="Test.php">./tests/Client/Feature</directory>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
 
-        <testsuite name="Client Unit">
-            <directory suffix="Test.php">./tests/Client/Unit</directory>
-        </testsuite>
-
-        <testsuite name="Client Controllers">
-            <directory suffix="Test.php">./tests/Client/Controllers</directory>
-        </testsuite>
-
-        <testsuite name="Admin Feature">
-            <directory suffix="Test.php">./tests/Admin/Feature</directory>
-        </testsuite>
-
-        <testsuite name="Admin Unit">
-            <directory suffix="Test.php">./tests/Admin/Unit</directory>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
     </testsuites>
 

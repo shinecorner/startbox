@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\User;
+use StartBox\Schema\Seeds\Api;
 use Illuminate\Database\Seeder;
+use StartBox\Schema\Seeds\Admin;
 use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
@@ -13,12 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Schema::disableForeignKeyConstraints();
-
-        $this->call(UsersTableSeeder::class);
-
-        echo "Access Token: " . User::first()->createToken('default')->plainTextToken  . "\n";
-
-        Schema::enableForeignKeyConstraints();
+        $this->call(Api::class);
+        $this->call(Admin::class);
     }
 }
