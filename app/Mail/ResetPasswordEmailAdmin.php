@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -22,7 +22,7 @@ class ResetPasswordEmailAdmin extends Mailable
      *
      * @return void
      */
-    public function __construct(User $user, string $token)
+    public function __construct(Admin $user, string $token)
     {
         $this->user = $user;
         $this->token = $token;

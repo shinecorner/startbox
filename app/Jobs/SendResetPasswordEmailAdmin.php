@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
@@ -21,7 +21,7 @@ class SendResetPasswordEmailAdmin implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(User $user, string $token)
+    public function __construct(Admin $user, string $token)
     {
         $this->user = $user;
         $this->token = $token;

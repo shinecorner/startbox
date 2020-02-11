@@ -1,10 +1,8 @@
 <?php
 
-use App\Models\User;
 use StartBox\Schema\Seeds\Api;
 use Illuminate\Database\Seeder;
 use StartBox\Schema\Seeds\Admin;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {

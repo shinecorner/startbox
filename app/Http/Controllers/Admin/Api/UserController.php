@@ -76,7 +76,9 @@ class UserController extends ApiController
     public function update(Request $request, $id)
     {
         if ($id > 0) {
-            $user = $this->sUser->update($request->all());
+            $data = $request->all();
+            $data['id'] = $id;
+            $user = $this->sUser->update($data);
             if ($user) {
                 return $this->respondData('User updated',  $user);
             }

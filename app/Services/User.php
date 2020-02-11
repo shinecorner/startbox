@@ -5,9 +5,10 @@ namespace App\Services;
 use App\Helpers\AdminBase;
 use App\Models\User as UserModel;
 use App\Exceptions\AdminApiException as ApiException;
-use App\Models\Organization;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
 
 class User extends AdminBase
 {
@@ -28,7 +29,9 @@ class User extends AdminBase
         $validator = Validator::make($data, [
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|max:255',
+            'organization_id' => 'required|integer',
+            'picture' => 'sometimes|required|image'
         ]);
         if ($validator->passes()) {
             $exiting_user = UserModel::where('email', $data['email'])->first();
@@ -38,15 +41,22 @@ class User extends AdminBase
                 $user->last_name = $data['last_name'];
                 $user->email = $data['email'];
 
-                $user->organization_id = isset($data['organization_id']) ? $data['organization_id'] : Organization::first()->id;
+                $user->organization_id = $data['organization_id'];
                 $user->sso_id = Str::random(20);
                 $user->token = Str::random(20);
                 $user->password = isset($data['password']) ? bcrypt($data['password']) : bcrypt(Str::random(15));
                 
-                /* if (isset($data['phone'])) {
-                    $user->phone = $data['phone'];
-                } */
-
+                if (isset($data['picture'])) {
+                    $file = $data['picture'];
+                    $path = $file->hashName('users/pictures');
+                    $image = Image::make($file);
+                    $image->fit(600, 600, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+                    if(Storage::disk('public')->put($path, (string) $image->encode())) {
+                        $user->picture = $path;
+                    }
+                }
                 if ($user->save()) {
                     return $user;
                 }
@@ -62,9 +72,10 @@ class User extends AdminBase
     public function update(array $data)
     {
         $rules = [
-            'id' => 'required|integer',
+            'id' => 'required',
             'first_name' => 'required|string|max:255',
             'last_name' => 'nullable|string|max:255',
+            'organization_id' => 'required|integer'
         ];
         return $this->updateModel($data, $rules);
     }

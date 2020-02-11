@@ -31,12 +31,12 @@
                     <span class="menu-title" data-i18n="Organizations">Organizations</span>
                 </a>
             </li>
-            <li id="facilities" class="nav-item disabled">
+            <li id="facilities" class="nav-item">
                 <a href="/admin/facilities"><i class="feather icon-square"></i>
                     <span class="menu-title" data-i18n="Facilities">Facilities</span>
                 </a>
             </li>
-            <li id="locations" class="nav-item disabled">
+            <li id="locations" class="nav-item">
                 <a href="/admin/locations"><i class="feather icon-map-pin"></i>
                     <span class="menu-title" data-i18n="Locations">Locations</span>
                 </a>
@@ -57,7 +57,7 @@
                 </a>
             </li>
             <li id="permissions" class="nav-item disabled">
-                <a href="/admin/permissions"><i class="feather icon-lock"></i>
+                <a href="/admin/permissions"><i class="feather icon-tag"></i>
                     <span class="menu-title" data-i18n="Permissions">Permissions</span>
                 </a>
             </li>

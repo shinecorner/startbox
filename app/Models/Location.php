@@ -15,7 +15,25 @@ class Location extends Model
     protected $casts = [];
     public $timestamps = true;
 
-	use SoftDeletes, HasCreator;
+    use SoftDeletes, HasCreator;
+    
+    protected $fillable = [
+        'title', 'description', 'organization_id', 'facility_id'
+    ];
+    
+    public $searchable = [
+        'title', 'description'
+    ];
+
+    public function toSearchableArray()
+    {
+        return array_flip($this->searchable);
+    }
+
+    public function getSearchableArray()
+    {
+        return $this->searchable;
+    }
 
     /***************************************************************************************
      ** RELATIONS

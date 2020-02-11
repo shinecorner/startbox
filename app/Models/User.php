@@ -86,6 +86,11 @@ class User extends Authenticatable
         return $this->morphTo();
     }
 
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
     /***************************************************************************************
      ** CRUD
      ***************************************************************************************/
@@ -138,7 +143,7 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->is_admin;
+        return false;
     }
 
     public function isProvider()

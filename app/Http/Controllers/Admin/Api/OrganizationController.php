@@ -103,6 +103,12 @@ class OrganizationController extends ApiController
         return $this->respondWithErrors(404, 'Organization not found');
     }
 
+    public function organizations_list(Request $request)
+    {
+        $organizations = OrganizationModel::where('title', 'like', $request->query('q') . '%')->get();
+        return $this->respondData('Organizations list',  $organizations);
+    }
+
 
     //Non resources methods
     public function organization_facilities($organization_id)

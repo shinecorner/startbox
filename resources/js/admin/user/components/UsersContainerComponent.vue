@@ -2,7 +2,7 @@
         <div class="row">
             <div class="col-12">
                 <transition :name="transitionName">
-                    <router-view></router-view>
+                    <router-view :organizations="organizations"></router-view>
                 </transition>
             </div>
         </div>
@@ -10,7 +10,7 @@
     
     <script>
     export default {
-        props: ['roles'],
+        props: ['organizations'],
         data() {
             return {
                 transitionName: 'slide-left'

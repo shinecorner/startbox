@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin\Api;
 
 use App\Http\Controllers\ApiController;
 use App\Models\User;
+use App\Models\Admin;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -55,7 +56,7 @@ class AdminLoginController extends ApiController
             return $this->respondWithErrors('422', $validator->errors());
         }
 
-        $user = User::where('email',  $data['email'])->first();
+        $user = Admin::where('email',  $data['email'])->first();
 
         if (!$user || ! Hash::check($data['password'], $user->password)) {
             return $this->respondWithErrors('403', ['Invalid credentials']);

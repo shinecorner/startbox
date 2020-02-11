@@ -1,5 +1,5 @@
 <template>
-    <div class="card">
+    <div class="card" style="min-height: 75vh;">
         <div class="card-content">
             <div class="card-body">
                 <form class="form" autocomplete="off" @submit.prevent="create" method="post" novalidate>

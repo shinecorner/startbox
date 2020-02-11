@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
 use App\Jobs\SendResetPasswordEmailAdmin;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class AdminForgotPasswordController extends ApiController
@@ -40,7 +40,7 @@ class AdminForgotPasswordController extends ApiController
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $user = User::byEmail($request->email)->first();
+        $user = Admin::byEmail($request->email)->first();
 
         if($user){
             $token = $this->broker()->createToken($user);

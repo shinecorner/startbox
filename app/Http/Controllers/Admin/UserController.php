@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\MockRepository\ProcedureMock;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -21,7 +22,10 @@ class UserController extends Controller
     public function index($path = null, $path1 = null, $path2 = null, $path3 = null, $path4 = null)
     {
         if (file_exists(resource_path('views/admin/users/index.blade.php'))) {
-            return view('admin.users.index');
+            $organizations = Organization::all();
+            return view('admin.users.index')->with([
+                'organizations' => $organizations
+            ]);
         }
         return abort(404);
     }

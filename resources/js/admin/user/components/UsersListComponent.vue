@@ -1,105 +1,74 @@
 <template>
-    <div class="card">
-        <div class="card-content">
-            <div class="card-body">
-                <div class="col-md-12">
-                    <h4 style="margin-bottom:10px;"><strong>Users</strong></h4>
-                </div>
-                <div>
-                    <div class="card-content">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <form class="form-inline" v-on:submit.prevent="showPage(1)">
-                                        <fieldset style="width: 100%;">
-                                            <div class="input-group pr-0 pl-0">
-                                                <input type="text" class="form-control" name="search" v-model="query"
-                                                    placeholder="Search...">
-                                                <div class="input-group-append" id="button-addon2">
-                                                    <button class="btn btn-primary" type="submit"><i
-                                                            class="fa fa-search"></i></button>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </form>
-                                </div>
-                                <!-- <div class="col-12 col-md-3 " style="padding-left:21px; padding-right:21px;">
-                                                                <div class="form-group" style="width: 100%;">
-                                                                    <label>Roles</label>
-                                                                    <select id="select2-roles" class="select2-placeholder form-control"
-                                                                        data-placeholder="Select roles..." style="width: 100%">
-                                                                        <option value="all">All</option>
-                                                                        <option v-for="(role, index) in roles" :key="index" :value="role.name"
-                                                                            style="text-transform:capitalize;">
-                                                                            {{capitalizeFirstLetter(role.name)}}</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div> -->
-                                <div class="col-12 col-md-6 text-right">
-                                    <div class="form-group">
-                                        <!-- Outline buttons -->
-                                        <button type="button" class="btn btn-outline-primary btn-min-width mr-1 mb-1"
-                                            @click="$router.push({ name: 'create_user'})">Add</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-if="users.length >0" class="table-responsive">
-                                <table id="recent-customers"
-                                    class="table table-hover mb-0 ps-container ps-theme-default">
-                                    <thead>
-                                        <tr>
-                                            <th>Full Name</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <!-- <th class="text-center">Status</th>
-                                            <template
-                                                v-if="user.roles[0].name == 'admin' || user.roles[0].name == 'manager' || hasAdminPermission">
-                                                <th class="text-center">Audit</th>
-                                                <th class="text-center"></th>
-                                            </template> -->
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(_user, index) in users" :key="index">
-                                            <td class="text-truncate">{{_user.first_name}} {{_user.last_name}}</td>
-                                            <td class="text-truncate">{{_user.phone}}</td>
-                                            <td class="text-truncate">{{_user.email}}</td>
-                                            <!-- <td class="text-center">
-                                                <span
-                                                    :class="{'badge badge-warning' : _user.status == 'active',
-                                                            'badge badge-secondary' : _user.status == 'inactive'}">{{_user.status}}
-                                                </span>
-                                            </td>
-                                            <template
-                                                v-if="user.roles[0].name == 'admin' || user.roles[0].name == 'manager' || hasAdminPermission">
-                                                <td style="text-align:center;"><a :href="'/api/admin/su/'+_user.id"><i
-                                                            class="fa fa-eye text-warning"></i></a></td>
-                                                <td style="text-align:center;"><a
-                                                        :href="'/admin/users/edit/' + _user.id"
-                                                        class="btn btn-secondary btn-sm square">Edit</a></td>
-                                            </template> -->
-                                            <td width="10px" class="text-center">
-                                                <div class="btn-group" role="group">
-                                                    <button
-                                                        @click="$router.push({ name: 'edit_user', params: {id: _user.id}})"
-                                                        type="button" class="btn btn-icon btn-outline-primary"><i
-                                                            class="fa fa-pencil"></i></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div v-else class="text-center">
-                                <div style="padding: 20px">
-                                    <h4>{{no_found_msg}}</h4>
-                                </div>
-                            </div>
+    <div class="row match-height">
+        <div class="col-12 col-md-6">
+            <form class="form-inline" v-on:submit.prevent="showPage(1)">
+                <fieldset style="width: 100%;">
+                    <div class="input-group pr-0 pl-0">
+                        <input type="text" class="form-control" name="search" v-model="query"
+                            placeholder="Search user...">
+                        <div class="input-group-append" id="button-addon2">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
                         </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-12 col-md-6 text-right">
+            <div class="form-group">
+                <button type="button" class="btn btn-outline-primary btn-min-width mr-1 mb-1"
+                    @click="$router.push({ name: 'create_user'})">Add</button>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card active-users" style="min-height: 75vh;">
+                <div class="card-header border-0">
+                    <h4 class="card-title">Users</h4> <a class="heading-elements-toggle"><i
+                            class="fa fa-ellipsis-v font-medium-3"></i></a>
+                </div>
+                <div class="card-content">
+                    <div v-if="users.length >0" class="table-responsive position-relative">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Organization</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(_user, index) in users" :key="index">
+                                    <td class="text-truncate">
+                                        <div class="avatar avatar-md mr-1">
+                                            <img :src="_user.picture ? '/storage/' + _user.picture : '/admin/images/avatar-placeholder.png'"
+                                                alt="Generic placeholder image" class="rounded-circle"></div> <span
+                                            class="text-truncate">{{_user.first_name}} {{_user.last_name}}</span>
+                                    </td>
+                                    <td class="align-middle"><span>{{_user.email}}</span></td>
+                                    <td class="align-middle"><span>{{getOrganization(_user.organization_id)}}</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="btn-group" role="group">
+                                            <button @click="$router.push({ name: 'edit_user', params: {id: _user.id}})"
+                                                type="button" class="btn btn-icon btn-outline-primary"><i
+                                                    class="fa fa-pencil"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <pagination :pagination="pagination" p_classes="justify-content-center" @onFirst="first"
                             @onLast="last" @onShowPage="showPage">
                         </pagination>
+                    </div>
+                    <div v-else class="table-responsive position-relative mt-5">
+                        <table class="table">
+                            <tbody>
+                                <tr class="text-center">
+                                    <h3>{{no_found_msg}}</h3>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -113,7 +82,7 @@
     import UserServices from '../services/user-services.js';
     export default {
         mixins: [UserServices, PaginationMixin],
-        props: ['roles'],
+        props: ['organizations'],
         components: {
             pagination: PaginationViewComponent
         },
@@ -127,7 +96,7 @@
         },
         methods: {
             getUserList(params) {
-                params["fields"] = ["id", "first_name", "last_name", "email"];
+                params["fields"] = ["id", "first_name", "last_name", "email", "picture", "organization_id"];
                 params["orderby"] = { created_at: 'desc' };
                 this.query = this.query.trim();
                 if (this.query != "") {
@@ -160,6 +129,16 @@
                         toastr.error(response.errors[0], 'Error');
                     }
                 }
+            }, 
+            getOrganization(id) {
+                if (this.organizations.length > 0) {
+                    for (var i in this.organizations) {
+                        if (this.organizations[i].id == id) {
+                            return this.organizations[i].title;
+                        }
+                    }
+                }
+                return 'N/A';
             }
         },
         watch: {

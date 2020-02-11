@@ -13,6 +13,11 @@ class Facility extends Model
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $casts = [];
+
+    protected $fillable = [
+        'title', 'description', 'organization_id'
+    ];
+
     public $timestamps = true;
 
 	use SoftDeletes, HasCreator;

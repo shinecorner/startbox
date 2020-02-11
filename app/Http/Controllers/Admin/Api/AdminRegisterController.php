@@ -13,7 +13,6 @@ class AdminRegisterController extends ApiController
 
     public function register(Request $request)
     {
-         //TODO
-         return $this->respondData('Route reached at ' . url()->current(), ['body' => $request->all()]);
+        
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class FacilityController extends Controller
@@ -14,7 +15,13 @@ class FacilityController extends Controller
      */
     public function index()
     {
-        //
+        if (file_exists(resource_path('views/admin/facilities/index.blade.php'))) {
+            $organizations = Organization::all();
+            return view('admin.facilities.index')->with([
+                'organizations' => $organizations
+            ]);
+        }
+        return abort(404);
     }
 
     /**

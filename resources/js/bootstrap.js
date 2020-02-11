@@ -18,10 +18,27 @@ window.Auth = auth;
 window.axios = require('axios');
 
 document.addEventListener('DOMContentLoaded', function () {
-  let token = document.head.querySelector('meta[name="csrf-token"]');
+  var token = document.querySelector('meta[name="csrf-token"]');
   if (token) {
     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
   }
+
+  try {
+    $.ajaxSetup({
+      beforeSend: function (xhr) {
+        const AUTH_TOKEN = Auth.getAccessToken();
+        this.url = process.env.MIX_API_BASE_URL + this.url;
+        if (AUTH_TOKEN) {
+          xhr.setRequestHeader("Authorization", `Bearer ${AUTH_TOKEN}`);
+        }
+        if (token) {
+          xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
+        } else {
+          console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+        }
+      }
+    });
+  } catch (e) { }
 });
 
 if (Auth.checkAuth() && Helpers.isPath(window.location.pathname, ['/admin/login', '/admin/register', '/admin/recover-password', '/admin/password/reset.*'])) {
@@ -34,25 +51,8 @@ if (Auth.checkAuth() && Helpers.isPath(window.location.pathname, ['/admin/login'
   }
 }
 
-try {
-  $.ajaxSetup({
-    beforeSend: function (xhr) {
-      const AUTH_TOKEN = Auth.getAccessToken();
 
-      this.url = 'http://api.startbox.loc.com/' + this.url;
-      if (AUTH_TOKEN) {
-        xhr.setRequestHeader("Authorization", `Bearer ${AUTH_TOKEN}`);
-      }
-      if (token) {
-        xhr.setRequestHeader('X-CSRF-TOKEN', token.content);
-      } else {
-        console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-      }
-    }
-  });
-} catch (e) { }
-
-window.axios.defaults.baseURL = "http://api.startbox.loc.com/admin/";
+window.axios.defaults.baseURL = process.env.MIX_API_BASE_URL + '/admin/';
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 

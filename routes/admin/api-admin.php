@@ -32,6 +32,7 @@ Route::middleware('api-admin')->group(function () {
         Route::get('{organization_id}/facilities/{facility_id}/locations', 'Api\OrganizationController@organization_facility_locations');
         Route::get('{organization_id}/facilities/{facility_id}/locations/{location_id}', 'Api\OrganizationController@organization_facility_location');
         Route::post('{organization_id}/domain-settings', 'Api\OrganizationController@domain_settings');
+        Route::get('list', 'Api\OrganizationController@organizations_list');
     });
     //Organizations resourse routes
     Route::apiResource('organizations', 'Api\OrganizationController');

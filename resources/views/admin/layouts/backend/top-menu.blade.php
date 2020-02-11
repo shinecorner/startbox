@@ -1,5 +1,6 @@
 <!-- BEGIN: Header-->
-<nav id="top-menu" class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+<nav id="top-menu"
+	class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
 	<div class="navbar-wrapper">
 		<div class="navbar-header">
 			<ul class="nav navbar-nav flex-row">

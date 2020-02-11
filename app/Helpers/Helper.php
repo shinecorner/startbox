@@ -278,4 +278,38 @@ class Helper
         $fig = pow(10, $precision);
         return (ceil($number * $fig) / $fig);
     }
+
+    public function generate_readable_string($length = 1)
+        {  
+            $string     = '';
+            $vowels     = array("a","e","i","o","u");  
+            $consonants = array(
+                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 
+                'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'
+            );  
+            srand((double) microtime() * 1000000);
+            $max = $length/2;
+            for ($i = 1; $i <= $max; $i++)
+            {
+                $string .= $consonants[rand(0,19)];
+                $string .= $vowels[rand(0,4)];
+            }
+            return $string;
+        }
+    
+    public function generate_title($length = 3)
+    {  
+        for ($i=0; $i < $length ; $i++) { 
+            $title[] = $this->generate_readable_string();
+        }
+        return ucfirst(implode(" ", $title));
+    }
+
+    public function generate_description($length = 30)
+    {  
+        for ($i=0; $i < $length ; $i++) { 
+            $description[] =  $this->generate_readable_string();
+        }
+        return ucfirst(implode(" ", $description));
+    }
 }

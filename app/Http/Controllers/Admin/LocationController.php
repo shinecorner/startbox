@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Facility;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
@@ -14,7 +16,15 @@ class LocationController extends Controller
      */
     public function index()
     {
-        //
+        if (file_exists(resource_path('views/admin/locations/index.blade.php'))) {
+            $organizations = Organization::all();
+            $facilities = Facility::all();
+            return view('admin.locations.index')->with([
+                'organizations' => $organizations,
+                'facilities' => $facilities
+            ]);
+        }
+        return abort(404);
     }
 
     /**

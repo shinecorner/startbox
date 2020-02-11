@@ -13,7 +13,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/register', function () {
-    return view('admin.auth.register');
+    return redirect('/admin/login');
 })->name('register');
 
 Route::get('/recover-password', function () {
@@ -29,4 +29,6 @@ Route::middleware([/* 'auth' */])->group(function () {
     Route::get('/dashboard', 'DashboardController@index');
     Route::get('/users/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'UserController@index');
     Route::get('/organizations/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'OrganizationController@index');
+    Route::get('/facilities/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'FacilityController@index');
+    Route::get('/locations/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'LocationController@index');
 });
