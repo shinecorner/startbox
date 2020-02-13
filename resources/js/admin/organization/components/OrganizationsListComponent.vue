@@ -43,7 +43,7 @@
                                                 alt="Generic placeholder image" class="rounded-circle"></div> <span
                                             class="text-truncate">{{_organization.title}}</span>
                                     </td>
-                                    <td class="align-middle"><span>{{_organization.description}}</span></td>
+                                    <td class="align-middle"><span>{{_organization.description.substring(0, 120) + ' ...'}}</span></td>
                                     </td>
                                     <td class="align-middle">
                                         <div class="btn-group" role="group">
@@ -140,3 +140,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .avatar {
+        width: 60px;
+        height: 60px;
+    }
+</style>

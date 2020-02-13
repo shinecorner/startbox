@@ -129,7 +129,7 @@
                         toastr.error(response.errors[0], 'Error');
                     }
                 }
-            }, 
+            },
             getOrganization(id) {
                 if (this.organizations.length > 0) {
                     for (var i in this.organizations) {
@@ -159,3 +159,10 @@
         }
     }
 </script>
+
+<style scoped>
+    .avatar {
+        width: 50px;
+        height: 50px;
+    }
+</style>

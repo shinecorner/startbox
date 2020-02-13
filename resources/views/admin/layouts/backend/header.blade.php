@@ -21,6 +21,13 @@
     <link rel="stylesheet" type="text/css" href="/admin/app-assets/vendors/css/extensions/sweetalert2.min.css">
     <!-- END: Vendor CSS-->
 
+    {{-- Quill CSS --}}
+    <link rel="stylesheet" type="text/css" href="../../../admin/app-assets/vendors/css/forms/quill/katex.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../admin/app-assets/vendors/css/forms/quill/monokai-sublime.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../admin/app-assets/vendors/css/forms/quill/quill.snow.css">
+    <link rel="stylesheet" type="text/css" href="../../../admin/app-assets/vendors/css/forms/quill/quill.bubble.css">
+    {{-- Quill CSS --}}
+
     <!-- BEGIN: Theme CSS-->
     <link rel="stylesheet" type="text/css" href="/admin/app-assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/admin/app-assets/css/bootstrap-extended.min.css">
@@ -43,6 +50,12 @@
 
     @yield('specific_vendor_header')
     <link rel="stylesheet" href="{!! asset('admin/css/app.css') !!}" />
+
+    {{-- Quill --}}
+    <script src="{{ asset('admin/app-assets/vendors/js/forms/quill/highlight.min.js') }}"></script>
+    <script src="{{ asset('admin/app-assets/vendors/js/forms/quill/quill.js') }}"></script>
+    <script src="{{ asset('admin/app-assets/vendors/js/forms/quill/katex.min.js') }}"></script>
+    {{-- End Quill --}}
 
   </head>
   <!-- END: Head-->

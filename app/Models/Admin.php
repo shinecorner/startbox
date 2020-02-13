@@ -20,7 +20,7 @@ class Admin extends Authenticatable
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'status'
+        'first_name', 'last_name', 'email', 'status', 'avatar'
     ];
 
     public $searchable = [

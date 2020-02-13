@@ -6,9 +6,9 @@
                     data-placement="right" data-original-title="General"></i>
             </li> --}}
             <li id="dashboard" class="nav-item">
-                <a href="/admin/dashboard"><i class="feather icon-layout"></i>
+                <a href="/admin/dashboard"><i class="feather icon-grid"></i>
                     <span class="menu-title" data-i18n="Dashboard">Dashboard</span>
-                    <span class="badge badge badge-primary badge-pill float-right mr-2">3</span>
+                    {{-- <span class="badge badge badge-primary badge-pill float-right mr-2">3</span> --}}
                 </a>
                 {{-- <ul class="menu-content">
             <li><a class="menu-item" href="dashboard-ecommerce.html" data-i18n="eCommerce">eCommerce</a>
@@ -26,8 +26,13 @@
                     <span class="menu-title" data-i18n="List">Users</span>
                 </a>
             </li>
+            <li id="admins" class="nav-item">
+                <a href="/admin/system-admins"><i class="feather icon-award"></i>
+                    <span class="menu-title" data-i18n="Logs">System Admins</span>
+                </a>
+            </li>
             <li id="organizations" class="nav-item">
-                <a href="/admin/organizations"><i class="feather icon-award"></i>
+                <a href="/admin/organizations"><i class="feather icon-layout"></i>
                     <span class="menu-title" data-i18n="Organizations">Organizations</span>
                 </a>
             </li>
@@ -64,6 +69,11 @@
             <li id="roles" class="nav-item disabled">
                 <a href="/admin/roles"><i class="feather icon-lock"></i>
                     <span class="menu-title" data-i18n="Roles">Roles</span>
+                </a>
+            </li>
+            <li id="pages" class="nav-item">
+                <a href="/admin/pages"><i class="feather icon-file-text"></i>
+                    <span class="menu-title" data-i18n="Pages">Pages</span>
                 </a>
             </li>
             <li id="logs" class="nav-item disabled">

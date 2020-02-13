@@ -28,7 +28,9 @@ Route::middleware([/* 'auth' */])->group(function () {
     }); */
     Route::get('/dashboard', 'DashboardController@index');
     Route::get('/users/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'UserController@index');
+    Route::get('/pages/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'PageController@index');
     Route::get('/organizations/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'OrganizationController@index');
     Route::get('/facilities/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'FacilityController@index');
     Route::get('/locations/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'LocationController@index');
+    Route::get('/system-admins/{path?}/{path1?}/{path2?}/{path3?}/{path4?}', 'AdminController@index');
 });

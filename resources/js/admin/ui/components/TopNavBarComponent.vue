@@ -1,8 +1,8 @@
 <template>
     <div class="collapse navbar-collapse" id="navbar-mobile">
         <ul class="nav navbar-nav mr-auto float-left">
-            <li class="dropdown nav-item mega-dropdown d-none d-lg-block"><a class="dropdown-toggle nav-link" href="#"
-                    data-toggle="dropdown">Mega</a>
+            <!-- <li class="dropdown nav-item mega-dropdown d-none d-lg-block"><a class="dropdown-toggle nav-link" href="#"
+                    data-toggle="dropdown">Menu</a>
                 <ul class="mega-dropdown-menu dropdown-menu row p-1">
                     <li class="col-md-4 bg-mega p-2">
                         <h3 class="text-white mb-1 font-weight-bold">Mega Menu Sidebar</h3>
@@ -77,9 +77,7 @@
                         </ul>
                     </li>
                 </ul>
-            </li>
-            <li class="nav-item d-none d-md-block"><a class="nav-link nav-link-expand" href="#"><i
-                        class="ficon feather icon-maximize"></i></a></li>
+            </li> -->
             <li class="nav-item nav-search"><a class="nav-link nav-link-search" href="#"><i
                         class="ficon feather icon-search"></i></a>
                 <div class="search-input">

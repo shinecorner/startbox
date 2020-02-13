@@ -146,9 +146,11 @@
                     cancelButtonClass: "btn btn-danger ml-1",
                     buttonsStyling: !1
                 }).then((function (t) {
-                    if (self.organization.id > 0) {
-                        $.LoadingOverlay("show");
-                        self.removeOrganizationCall(self.organization.id, self.removeOrganizationCallback);
+                    if (t.value) {
+                        if (self.organization.id > 0) {
+                            $.LoadingOverlay("show");
+                            self.removeOrganizationCall(self.organization.id, self.removeOrganizationCallback);
+                        }
                     }
                 }));
 

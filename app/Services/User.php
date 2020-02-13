@@ -39,8 +39,8 @@ class User extends AdminBase
                 $user = new UserModel();
                 $user->first_name = $data['first_name'];
                 $user->last_name = $data['last_name'];
+                $user->full_name = $data['first_name'].' '.$data['last_name'];
                 $user->email = $data['email'];
-
                 $user->organization_id = $data['organization_id'];
                 $user->sso_id = Str::random(20);
                 $user->token = Str::random(20);

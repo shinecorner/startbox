@@ -5,7 +5,7 @@
                 <fieldset style="width: 100%;">
                     <div class="input-group pr-0 pl-0">
                         <input type="text" class="form-control" name="search" v-model="query"
-                            placeholder="Search facility...">
+                            placeholder="Search admin...">
                         <div class="input-group-append" id="button-addon2">
                             <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
                         </div>
@@ -16,44 +16,42 @@
         <div class="col-12 col-md-6 text-right">
             <div class="form-group">
                 <button type="button" class="btn btn-outline-primary btn-min-width mr-1 mb-1"
-                    @click="$router.push({ name: 'create_facility'})">Add</button>
+                    @click="$router.push({ name: 'create_admin'})">Add</button>
             </div>
         </div>
         <div class="col-md-12">
-            <div class="card active-facilities" style="min-height: 75vh;">
+            <div class="card active-admins" style="min-height: 75vh;">
                 <div class="card-header border-0">
-                    <h4 class="card-title">Facilities</h4> <a class="heading-elements-toggle"><i
+                    <h4 class="card-title">Admins</h4> <a class="heading-elements-toggle"><i
                             class="fa fa-ellipsis-v font-medium-3"></i></a>
                 </div>
                 <div class="card-content">
-                    <div v-if="facilities.length > 0" class="table-responsive position-relative">
+                    <div v-if="admins.length >0" class="table-responsive position-relative">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Organization</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(_facility, index) in facilities" :key="index">
+                                <tr v-for="(_admin, index) in admins" :key="index">
                                     <td class="text-truncate">
-                                        <div class="avatar avatar-md mr-1"><img
-                                                :src="_facility.logo ? '/storage/' + _facility.logo : '/admin/images/logo-placeholder.jpg'"
+                                        <div class="avatar avatar-md mr-1">
+                                            <img :src="_admin.avatar ? '/storage/' + _admin.avatar : '/admin/images/avatar-placeholder.png'"
                                                 alt="Generic placeholder image" class="rounded-circle"></div> <span
-                                            class="text-truncate">{{_facility.title}}</span>
+                                            class="text-truncate">{{_admin.first_name}} {{_admin.last_name}}</span>
                                     </td>
-                                    <td class="align-middle">
-                                        <span>{{_facility.description.substring(0, 120) + ' ...'}}</span></td>
-                                    </td>
-                                    <td class="align-middle"><span>{{getOrganization(_facility.organization_id)}}</span>
-                                    </td>
+                                    <td class="align-middle"><span>{{_admin.email}}</span></td>
+                                    <td class="align-middle"><span
+                                            :class="{'badge badge-primary' : _admin.status == 'active', 'badge badge-danger' : _admin.status == 'inactive'}">{{_admin.status | capitalize}}</span>
                                     </td>
                                     <td class="align-middle">
                                         <div class="btn-group" role="group">
                                             <button
-                                                @click="$router.push({name: 'edit_facility', params: {id: _facility.id}})"
+                                                @click="$router.push({ name: 'edit_admin', params: {id: _admin.id}})"
                                                 type="button" class="btn btn-icon btn-outline-primary"><i
                                                     class="fa fa-pencil"></i></button>
                                         </div>
@@ -74,7 +72,6 @@
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -84,46 +81,45 @@
 <script>
     import PaginationMixin from "./../../../helpers/pagination";
     import PaginationViewComponent from "./../../common/PaginationViewComponent";
-    import FacilityServices from '../services/facility-services.js';
+    import AdminServices from '../services/admin-services.js';
     export default {
-        mixins: [FacilityServices, PaginationMixin],
+        mixins: [AdminServices, PaginationMixin],
         components: {
             pagination: PaginationViewComponent
         },
-        props: ['organizations'],
         data() {
             return {
-                facilities: [],
+                admins: [],
                 Helpers: Helpers,
                 query: "",
                 no_found_msg: ''
             }
         },
         methods: {
-            getFacilityList(params) {
-                params["fields"] = ["id", "title", "description", "organization_id"];
+            getAdminList(params) {
+                params["fields"] = ["id", "first_name", "last_name", "email", "avatar", "status"];
                 params["orderby"] = { created_at: 'desc' };
                 this.query = this.query.trim();
                 if (this.query != "") {
                     let query = this.query;
                     params["query"] = {
                         value: "+*" + query.replace(/\s+/g, "* +*") + "*", // search term
-                        fields: ["title", "description"]
+                        fields: ["first_name", "last_name", "email", "status"]
                     };
                 }
                 this.caching(params);
                 $.LoadingOverlay("show");
-                this.getFacilitiesCall(params, this.getFacilitiesCallback);
+                this.getAdminsCall(params, this.getAdminsCallback);
             },
-            getFacilitiesCallback(response) {
+            getAdminsCallback(response) {
                 $.LoadingOverlay("hide");
                 if (response.code == 200) {
-                    this.facilities = response.data;
+                    this.admins = response.data;
                     this.calcPages(response.pagination);
-                    if (this.facilities.length > 0) {
+                    if (this.admins.length > 0) {
                         this.no_found_msg = '';
                     } else {
-                        this.no_found_msg = 'No facilities were found';
+                        this.no_found_msg = 'No admins were found';
                     }
                 } else {
                     if (Helpers.isAssoc(response.errors)) {
@@ -134,20 +130,25 @@
                         toastr.error(response.errors[0], 'Error');
                     }
                 }
-            },
-            getOrganization(id) {
-                if (this.organizations.length > 0) {
-                    for (var i in this.organizations) {
-                        if (this.organizations[i].id == id) {
-                            return this.organizations[i].title;
-                        }
-                    }
-                }
-                return 'N/A';
+            }
+        },
+        watch: {
+            query: _.debounce(function () {
+
+            }, 300),
+            role: _.debounce(function () {
+
+            }, 300)
+        },
+        filters: {
+            capitalize: function (value) {
+                if (!value) return ''
+                value = value.toString()
+                return value.charAt(0).toUpperCase() + value.slice(1)
             }
         },
         created() {
-            this.paginationInit(15, this.getFacilityList);
+            this.paginationInit(15, this.getAdminList);
             this.query = this.getQueryCached();
         },
         mounted() {
@@ -159,7 +160,7 @@
 
 <style scoped>
     .avatar {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
     }
 </style>

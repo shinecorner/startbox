@@ -20,10 +20,24 @@ Route::middleware('api-guest')->prefix('auth')->group(function () {
 });
 
 Route::middleware('api-admin')->group(function () {
+    //Dashboard summary
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', 'Api\DashboardController@index');
+    });
+
     //Auth
     Route::prefix('auth')->group(function () {
         Route::get('/logout', 'Api\AdminLoginController@logout');
     });
+    
+
+    //System-admins resource routes
+    Route::apiResource('admins', 'Api\AdminController');
+    
+    //System-admins non resource routes
+   /*  Route::prefix('admins')->group(function () {
+        Route::post('/update/{id}', 'Api\AdminController@update');
+    }); */
 
     //Organizations non resource routes
     Route::prefix('organizations')->group(function () {
@@ -100,4 +114,7 @@ Route::middleware('api-admin')->group(function () {
     });
     //Trainings resourse routes
     Route::apiResource('trainings', 'Api\TrainingController');
+
+    // Pages resource routes
+    Route::apiResource('pages', 'Api\PageController');
 });

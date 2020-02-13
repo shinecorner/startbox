@@ -54,7 +54,6 @@ class Kernel extends HttpKernel
         ],
 
         'api-admin' => [
-           /*  'admin', */
             'throttle:60,1',
             'bindings',
             'auth:airlock',

@@ -19,7 +19,7 @@
         "league/flysystem-aws-s3-v3": "~1.0",
         "pda/pheanstalk": "^4.0",
         "sentry/sentry-laravel": "^1.0",
-        "surgicallabs/sb_schema": "*"
+        "surgicallabs/sb_schema": "dev-develop"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

@@ -1,19 +1,14 @@
 export default {
     methods: {
         //ApiCalls
-        getUsers(data, callBackHandler) {
+        getSummaryCall(callBackHandler) {
             axios({
-                method: 'post',
-                url: '/api/admin/users/search',
-                data: data
+                method: 'get',
+                url: '/dashboard',
             }).then(response => {
-                if (response.data.status == 1) {
-                    return callBackHandler('200', response.data);
-                } else {
-                    return callBackHandler('001', response.data.errors);
-                }
+                return callBackHandler(response.data);
             }).catch((error) => {
-                return callBackHandler('002', error);
+                return callBackHandler(error);
             });
         },
     }

@@ -166,9 +166,11 @@
                     cancelButtonClass: "btn btn-danger ml-1",
                     buttonsStyling: !1
                 }).then((function (t) {
-                    if (self.facility.id > 0) {
-                        $.LoadingOverlay("show");
-                        self.removeFacilityCall(self.facility.id, self.removeFacilityCallback);
+                    if (t.value) {
+                        if (self.facility.id > 0) {
+                            $.LoadingOverlay("show");
+                            self.removeFacilityCall(self.facility.id, self.removeFacilityCallback);
+                        }
                     }
                 }));
             },
@@ -262,7 +264,7 @@
                     templateResult: function (t) {
                         if (t.loading) return t.text;
                         var e = "<div class='select2-result-repository clearfix'><div class='select2-result-repository__avatar'><img src='" + self.getLogo(t) + "' /></div><div class='select2-result-repository__meta'><div class='select2-result-repository__title'>" + t.text + "</div>";
-                        t.text && (e += "<div class='select2-result-repository__description'>" + t.description + "</div>");
+                        t.text && (e += "<div class='select2-result-repository__description'>" + t.description.substring(0, 60) + ' ...' + "</div>");
                         return e;
                     },
                     templateSelection: function (t) {

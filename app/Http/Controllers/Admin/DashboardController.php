@@ -19,9 +19,4 @@ class DashboardController extends ApiController
     {
         return view('admin.dashboard');
     }
-
-    public function domain_settings(Request $request)
-    {
-        //TODO APPLY ADMIN LEVEL SETTINGS
-    }
 }
