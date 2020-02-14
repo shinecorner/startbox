@@ -9,8 +9,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="first_name">First name</label>
-                                    <input v-model="admin.first_name" type="text" id="first_name" class="form-control"
+                                    <input v-model="admin.first_name" type="text" class="form-control"
                                         v-bind:class="{'is-invalid' : error.first_name}" name="first_name">
+                                    <div class="pt-2 pb-2" style="height: 20px;">
+                                        <label v-show="admin.first_name">Full name: <b>{{admin.first_name}}
+                                                {{admin.last_name}}</b></label>
+                                    </div>
                                     <span v-show="error.first_name"
                                         class="message-error"><b>{{error_message.first_name}}</b></span>
                                 </div>
@@ -18,14 +22,14 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="last_name">Last name</label>
-                                    <input v-model="admin.last_name" type="text" id="last_name" class="form-control"
+                                    <input v-model="admin.last_name" type="text" class="form-control"
                                         name="last_name">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input v-model="admin.email" type="text" id="email" class="form-control"
+                                    <input v-model="admin.email" type="text" class="form-control"
                                         v-bind:class="{'is-invalid' : error.email}" name="email">
                                     <span v-show="error.email"
                                         class="message-error"><b>{{error_message.email}}</b></span>
@@ -36,35 +40,25 @@
                             <div class="col-md-3 pl-5">
                                 <fieldset class="form-group">
                                     <div class="avatar-wrapper">
-                                        <img class="profile-pic" src="" />
-                                        <div class="upload-button">
+                                        <img class="profile-pic-admin" src="" />
+                                        <div class="upload-button-admin">
                                             <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                         </div>
-                                        <input class="file-upload" type="file" accept="image/*" ref="picture" />
-                                    </div>
-                                    <div class="pt-2 pb-2">
-                                        <label v-show="admin.first_name">Full name: <b>{{admin.first_name}}
-                                                {{admin.last_name}}</b></label>
+                                        <input class="file-upload-admin" type="file" accept="image/*" ref="picture" />
                                     </div>
                                 </fieldset>
                             </div>
                         </div>
                     </div>
-
                     <div class="form-actions text-right">
                         <button @click="$router.push({ name: 'admins_list'})" type="reset" class="btn btn-warning mr-1">
                             <i class="feather icon-x"></i> Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <!-- <i class="fa fa-check-square-o"></i> -->
                             <i
                                 v-bind:class="{'fa fa-circle-o-notch fa-spin fa-fw' : loading, 'fa fa-check-square-o': !loading}"></i>
                             {{admin.id > 0 ? 'Update' : 'Save'}}
                         </button>
-                        <!-- <button type="submit" class="btn btn-lg btn-success mb-1">
-                                    <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-                                    Light Layout
-                                </button> -->
                     </div>
                 </form>
                 <div v-if="admin.id > 0" class="row">
@@ -156,7 +150,7 @@
                 if (response.code == 200) {
                     this.admin = response.data;
                     if (this.admin.avatar) {
-                        $('.profile-pic').attr('src', '/storage/' + this.admin.avatar);
+                        $('.profile-pic-admin').attr('src', '/storage/' + this.admin.avatar);
                     }
                 } else {
                     if (Helpers.isAssoc(response.errors)) {
@@ -223,6 +217,18 @@
                 const formData = new FormData();
                 this.buildFormData(formData, data);
                 return formData;
+            },
+
+            readURL(input) {
+                if (input.files && input.files[0]) {
+                    this.admin.avatar = input.files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('.profile-pic-admin').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
         },
         watch: {
@@ -249,22 +255,11 @@
             Helpers.unBlockPage();
             var self = this;
             this.$nextTick(function () {
-                var readURL = function (input) {
-                    if (input.files && input.files[0]) {
-                        self.admin.avatar = input.files[0];
-                        var reader = new FileReader();
-
-                        reader.onload = function (e) {
-                            $('.profile-pic').attr('src', e.target.result);
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                    }
-                }
-                $(".file-upload").on('change', function () {
-                    readURL(this);
+                $(".file-upload-admin").on('change', function () {
+                    self.readURL(this);
                 });
-                $(".upload-button").on('click', function () {
-                    $(".file-upload").click();
+                $(".upload-button-admin").on('click', function () {
+                    $(".file-upload-admin").click();
                 });
             });
         }
@@ -312,17 +307,17 @@
         cursor: pointer;
     }
 
-    .avatar-wrapper:hover .profile-pic {
+    .avatar-wrapper:hover .profile-pic-admin {
         opacity: .5;
     }
 
-    .avatar-wrapper .profile-pic {
+    .avatar-wrapper .profile-pic-admin {
         height: 100%;
         width: 100%;
         transition: all .3s ease;
     }
 
-    .avatar-wrapper .profile-pic:after {
+    .avatar-wrapper .profile-pic-admin:after {
         font-family: FontAwesome;
         content: "\f007";
         top: 0;
@@ -336,7 +331,7 @@
         text-align: center;
     }
 
-    .avatar-wrapper .upload-button {
+    .avatar-wrapper .upload-button-admin {
         position: absolute;
         top: 0;
         left: 0;
@@ -344,7 +339,7 @@
         width: 100%;
     }
 
-    .avatar-wrapper .upload-button .fa-arrow-circle-up {
+    .avatar-wrapper .upload-button-admin .fa-arrow-circle-up {
         position: absolute;
         font-size: 169px;
         top: -10px;
@@ -356,7 +351,7 @@
         color: #34495e;
     }
 
-    .avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+    .avatar-wrapper .upload-button-admin:hover .fa-arrow-circle-up {
         opacity: .9;
     }
 </style>

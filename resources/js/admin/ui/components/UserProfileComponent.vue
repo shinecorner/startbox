@@ -42,12 +42,12 @@
                                                     aria-expanded="true">
                                                     <div class="media">
                                                         <div class="avatar-wrapper">
-                                                            <img class="profile-pic" src="" />
-                                                            <div class="upload-button">
+                                                            <img class="profile-pic-profile" src="" />
+                                                            <div class="upload-button-profile">
                                                                 <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                                             </div>
-                                                            <input class="file-upload" type="file" accept="image/*"
-                                                                ref="picture" />
+                                                            <input class="file-upload-profile" type="file"
+                                                                accept="image/*" ref="picture" />
                                                         </div>
                                                         <div v-if="user.id > 0 && user.avatar && (typeof user.avatar == 'string')"
                                                             class="media-body mt-75">
@@ -66,7 +66,7 @@
                                                                 <div class="controls">
                                                                     <label for="first_name">First name</label>
                                                                     <input v-model="user.first_name" type="text"
-                                                                        class="form-control" id="first_name"
+                                                                        class="form-control"
                                                                         v-bind:class="{'is-invalid' : error.first_name}"
                                                                         placeholder="First name">
                                                                     <span v-show="error.first_name"
@@ -80,7 +80,7 @@
                                                                     <label for="last_name">Last name</label>
                                                                     <input v-model="user.last_name" type="text"
                                                                         v-bind:class="{'is-invalid' : error.last_name}"
-                                                                        class="form-control" id="last_name"
+                                                                        class="form-control"
                                                                         placeholder="Last name">
                                                                     <span v-show="error.last_name"
                                                                         class="message-error"><b>{{error_message.last_name}}</b></span>
@@ -93,7 +93,7 @@
                                                                     <label for="email">Email</label>
                                                                     <input v-model="user.email" type="email"
                                                                         v-bind:class="{'is-invalid' : error.email}"
-                                                                        class="form-control" id="email"
+                                                                        class="form-control"
                                                                         placeholder="Email">
                                                                     <span v-show="error.email"
                                                                         class="message-error"><b>{{error_message.email}}</b></span>
@@ -297,7 +297,7 @@
                 if (response.code == 200) {
                     this.user = Object.assign({}, response.data);
                     if (this.user.avatar) {
-                        $('.profile-pic').attr('src', '/storage/' + this.user.avatar);
+                        $('.profile-pic-profile').attr('src', '/storage/' + this.user.avatar);
                     }
                     this.showModal();
                 } else {
@@ -374,7 +374,7 @@
                 if (response.code == 200) {
                     this.user = Object.assign({}, response.data);
                     toastr.success(response.message, 'Success');
-                    $('.profile-pic').attr('src', "");
+                    $('.profile-pic-profile').attr('src', "");
                     this.$emit('profile-updated', { first_name: this.user.first_name, last_name: this.user.last_name, avatar: this.user.avatar });
                 } else {
                     if (Helpers.isAssoc(response.errors)) {
@@ -386,6 +386,17 @@
                     }
                 }
             },
+            readURL(input) {
+                if (input.files && input.files[0]) {
+                    this.user.avatar = input.files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('.profile-pic-profile').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
         },
         watch: {
             'user.first_name'(val) {
@@ -444,30 +455,18 @@
         mounted() {
             var self = this;
             this.$nextTick(function () {
-                var readURL = function (input) {
-                    if (input.files && input.files[0]) {
-                        self.user.avatar = input.files[0];
-                        var reader = new FileReader();
-
-                        reader.onload = function (e) {
-                            $('.profile-pic').attr('src', e.target.result);
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                    }
-                }
-
-                $(".file-upload").on('change', function () {
-                    readURL(this);
+                $(".file-upload-profile").on('change', function () {
+                    self.readURL(this);
                 });
-                $(".upload-button").on('click', function () {
-                    $(".file-upload").click();
+                $(".upload-button-profile").on('click', function () {
+                    $(".file-upload-profile").click();
                 });
             });
 
             $('#large').on('hidden.bs.modal', function (e) {
                 self.$emit('reset-command');
-                $(".file-upload").val('');
-                $('.profile-pic').attr('src', "");
+                $(".file-upload-profile").val('');
+                $('.profile-pic-profile').attr('src', "");
             });
         }
     };
@@ -512,17 +511,17 @@
         cursor: pointer;
     }
 
-    .avatar-wrapper:hover .profile-pic {
+    .avatar-wrapper:hover .profile-pic-profile {
         opacity: .5;
     }
 
-    .avatar-wrapper .profile-pic {
+    .avatar-wrapper .profile-pic-profile {
         height: 100%;
         width: 100%;
         transition: all .3s ease;
     }
 
-    .avatar-wrapper .profile-pic:after {
+    .avatar-wrapper .profile-pic-profile:after {
         font-family: FontAwesome;
         content: "\f007";
         top: 0;
@@ -536,7 +535,7 @@
         text-align: center;
     }
 
-    .avatar-wrapper .upload-button {
+    .avatar-wrapper .upload-button-profile {
         position: absolute;
         top: 0;
         left: 0;
@@ -544,7 +543,7 @@
         width: 100%;
     }
 
-    .avatar-wrapper .upload-button .fa-arrow-circle-up {
+    .avatar-wrapper .upload-button-profile .fa-arrow-circle-up {
         position: absolute;
         font-size: 169px;
         top: -10px;
@@ -556,7 +555,7 @@
         color: #34495e;
     }
 
-    .avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+    .avatar-wrapper .upload-button-profile:hover .fa-arrow-circle-up {
         opacity: .9;
     }
 </style>

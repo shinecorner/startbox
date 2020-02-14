@@ -1,4 +1,5 @@
 <!-- BEGIN: Body-->
+@include ('admin.layouts.backend.header')
 
 <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar" data-open="click"
     data-menu="vertical-menu-modern" data-col="2-columns">
@@ -19,7 +20,7 @@
         </div>
     </div>
 
-    @include ('admin.layouts.backend.header')
+
     @include ('admin.layouts.backend.top-menu')
     @include ('admin.layouts.backend.side-menu')
 

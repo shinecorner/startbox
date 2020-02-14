@@ -9,9 +9,12 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="first_name">First name</label>
-                                    <input v-model="user.first_name" type="text" id="first_name" class="form-control"
+                                    <input v-model="user.first_name" type="text" class="form-control"
                                         v-bind:class="{'is-invalid' : error.first_name}" name="first_name">
-
+                                    <div class="pt-2 pb-2" style="height: 20px;">
+                                        <label v-show="user.first_name">Full name: <b>{{user.first_name}}
+                                                {{user.last_name}}</b></label>
+                                    </div>
                                     <span v-show="error.first_name"
                                         class="message-error"><b>{{error_message.first_name}}</b></span>
                                 </div>
@@ -19,14 +22,13 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="last_name">Last name</label>
-                                    <input v-model="user.last_name" type="text" id="last_name" class="form-control"
-                                        name="last_name">
+                                    <input v-model="user.last_name" type="text" class="form-control" name="last_name">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="email">Email</label>
-                                    <input v-model="user.email" type="text" id="email" class="form-control"
+                                    <input v-model="user.email" type="text" class="form-control"
                                         v-bind:class="{'is-invalid' : error.email}" name="email">
                                     <span v-show="error.email"
                                         class="message-error"><b>{{error_message.email}}</b></span>
@@ -47,21 +49,16 @@
                             <div class="col-md-3 pl-5">
                                 <fieldset class="form-group">
                                     <div class="avatar-wrapper">
-                                        <img class="profile-pic" src="" />
-                                        <div class="upload-button">
+                                        <img class="profile-pic-user" src="" />
+                                        <div class="upload-button-user">
                                             <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
                                         </div>
-                                        <input class="file-upload" type="file" accept="image/*" ref="picture" />
-                                    </div>
-                                    <div class="pt-2 pb-2">
-                                        <label v-show="user.first_name">Full name: <b>{{user.first_name}}
-                                                {{user.last_name}}</b></label>
+                                        <input class="file-upload-user" type="file" accept="image/*" ref="picture" />
                                     </div>
                                 </fieldset>
                             </div>
                         </div>
                     </div>
-
                     <div class="form-actions text-right">
                         <button @click="$router.push({ name: 'users_list'})" type="reset" class="btn btn-warning mr-1">
                             <i class="feather icon-x"></i> Cancel
@@ -174,7 +171,7 @@
                     if (this.user.id > 0) {
                         $("#organizations-select").val(this.user.organization_id).trigger("change");
                         if (this.user.picture) {
-                            $('.profile-pic').attr('src', '/storage/' + this.user.picture);
+                            $('.profile-pic-user').attr('src', '/storage/' + this.user.picture);
                         }
                     }
                 } else {
@@ -249,6 +246,17 @@
                 const formData = new FormData();
                 this.buildFormData(formData, data);
                 return formData;
+            },
+            readURL(input) {
+                if (input.files && input.files[0]) {
+                    this.admin.avatar = input.files[0];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('.profile-pic-user').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
             }
         },
         watch: {
@@ -314,22 +322,11 @@
                     self.user.organization_id = '';
                 });
 
-                var readURL = function (input) {
-                    if (input.files && input.files[0]) {
-                        self.user.picture = input.files[0];
-                        var reader = new FileReader();
-
-                        reader.onload = function (e) {
-                            $('.profile-pic').attr('src', e.target.result);
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                    }
-                }
-                $(".file-upload").on('change', function () {
-                    readURL(this);
+                $(".file-upload-user").on('change', function () {
+                    self.readURL(this);
                 });
-                $(".upload-button").on('click', function () {
-                    $(".file-upload").click();
+                $(".upload-button-user").on('click', function () {
+                    $(".file-upload-user").click();
                 });
             });
         }
@@ -377,17 +374,17 @@
         cursor: pointer;
     }
 
-    .avatar-wrapper:hover .profile-pic {
+    .avatar-wrapper:hover .profile-pic-user {
         opacity: .5;
     }
 
-    .avatar-wrapper .profile-pic {
+    .avatar-wrapper .profile-pic-user {
         height: 100%;
         width: 100%;
         transition: all .3s ease;
     }
 
-    .avatar-wrapper .profile-pic:after {
+    .avatar-wrapper .profile-pic-user:after {
         font-family: FontAwesome;
         content: "\f007";
         top: 0;
@@ -401,7 +398,7 @@
         text-align: center;
     }
 
-    .avatar-wrapper .upload-button {
+    .avatar-wrapper .upload-button-user {
         position: absolute;
         top: 0;
         left: 0;
@@ -409,7 +406,7 @@
         width: 100%;
     }
 
-    .avatar-wrapper .upload-button .fa-arrow-circle-up {
+    .avatar-wrapper .upload-button-user .fa-arrow-circle-up {
         position: absolute;
         font-size: 169px;
         top: -10px;
@@ -421,7 +418,7 @@
         color: #34495e;
     }
 
-    .avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+    .avatar-wrapper .upload-button-user:hover .fa-arrow-circle-up {
         opacity: .9;
     }
 </style>
