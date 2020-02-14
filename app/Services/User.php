@@ -75,13 +75,68 @@ class User extends AdminBase
             'id' => 'required',
             'first_name' => 'required|string|max:255',
             'last_name' => 'nullable|string|max:255',
-            'organization_id' => 'required|integer'
+            'organization_id' => 'required|integer',
+            'email' => 'required|email|max:255',
+            'picture' => 'sometimes|required|image'
         ];
-        return $this->updateModel($data, $rules);
+        $picture = null;
+        if(isset($data['picture'])){
+            $picture = $data['picture'];
+            unset($data['picture']);
+        }
+        $user = $this->updateModel($data, $rules);
+        if($user){
+            if($picture){
+                $current = $user->picture;
+                $path = $picture->hashName('users/pictures');
+                $image = Image::make($picture);
+                $image->fit(600, 600, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                if(Storage::disk('public')->put($path, (string) $image->encode()) == 1){
+                    if($current != ''){
+                        Storage::disk('public')->delete($current);
+                    }
+                    $user->picture = $path;
+                }
+            }
+            if($user->save()){
+                return $user;
+            }
+        } 
+        throw new ApiException("Error updating user data", '500');
     }
 
     public function delete($id, $where = [])
     {
         return $this->deleteModel($id, $where);
+    }
+
+    public function changePassword($data)
+    {
+        $messages = [
+            'password.regex' => 'Password length should be between 8 to 16 characters and contains at least: a digit, a lower case letter, an upper case letter and an special character (other than letters and numbers)',
+            'password.confirmed' => 'Password and password confirmation do not match'
+        ];
+        $validator = Validator::make($data, [
+            'id' => 'required',
+            'old_password' => 'required|max:255',
+            'password' => 'required|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,10}\S+$/'
+        ], $messages);
+        if ($validator->passes()) {
+            $user = User::find($data['id']);
+            if ($user) {
+                if (Hash::check($data['old_password'], $user->password)) {
+                    $user->password = bcrypt($data['password']);
+                    if ($user->save()) {
+                        return $user;
+                    }
+                } else {
+                    throw new ApiException('Invalid current password', '004', []);
+                }
+            }
+        } else {
+            throw new ApiException($validator->errors(), '004', $data);
+        }
     }
 }

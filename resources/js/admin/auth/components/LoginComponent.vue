@@ -119,7 +119,6 @@
             loginCallback(response) {
                 $.LoadingOverlay("hide");
                 if (response.code == 200) {
-                    console.log('OK');
                     Auth.setSession(response.data);
                     window.location = Helpers.getQueryParameter('redirect', '/admin/dashboard');
                 } else {

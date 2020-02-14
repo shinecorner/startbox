@@ -11,6 +11,7 @@
                                     <label for="first_name">First name</label>
                                     <input v-model="user.first_name" type="text" id="first_name" class="form-control"
                                         v-bind:class="{'is-invalid' : error.first_name}" name="first_name">
+
                                     <span v-show="error.first_name"
                                         class="message-error"><b>{{error_message.first_name}}</b></span>
                                 </div>
@@ -31,13 +32,6 @@
                                         class="message-error"><b>{{error_message.email}}</b></span>
                                 </div>
                             </div>
-                            <!--  <div class="col-md-3">
-                                <div class="form-group">
-                                    <label for="phone">Phone</label>
-                                    <input v-model="user.phone" type="text" id="phone" class="form-control"
-                                        name="phone">
-                                </div>
-                            </div> -->
                             <div class="col-md-3">
                                 <fieldset class="form-group">
                                     <label>Organization</label>
@@ -48,31 +42,22 @@
                                         class="message-error"><b>{{error_message.organization}}</b></span>
                                 </fieldset>
                             </div>
-                            <div class="col-md-3">
-                                <fieldset class="form-group">
-                                    <label>Picture</label>
-                                    <div class="custom-file">
-                                        <input @change="handleFileUpload" type="file" id="picture" ref="picture"
-                                            class="custom-file-input">
-                                        <label class="custom-file-label" for="picture">Choose file</label>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <!-- <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="last_name">Last name</label>
-                                    <textarea v-model="user.last_name" id="last_name" class="form-control"
-                                        v-bind:class="{'is-invalid' : error.last_name}" rows="5"
-                                        name="last_name"></textarea>
-                                    <span v-show="error.last_name"
-                                        class="message-error"><b>{{error_message.last_name}}</b></span>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="row">
-                            <div class="col-12">
-                                <label v-if="user.first_name">Full name: <b>{{user.first_name}}
-                                        {{user.last_name}}</b></label>
+                            <div class="col-md-3 pl-5">
+                                <fieldset class="form-group">
+                                    <div class="avatar-wrapper">
+                                        <img class="profile-pic" src="" />
+                                        <div class="upload-button">
+                                            <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                                        </div>
+                                        <input class="file-upload" type="file" accept="image/*" ref="picture" />
+                                    </div>
+                                    <div class="pt-2 pb-2">
+                                        <label v-show="user.first_name">Full name: <b>{{user.first_name}}
+                                                {{user.last_name}}</b></label>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                     </div>
@@ -82,15 +67,10 @@
                             <i class="feather icon-x"></i> Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <!-- <i class="fa fa-check-square-o"></i> -->
                             <i
                                 v-bind:class="{'fa fa-circle-o-notch fa-spin fa-fw' : loading, 'fa fa-check-square-o': !loading}"></i>
                             {{user.id > 0 ? 'Update' : 'Save'}}
                         </button>
-                        <!-- <button type="submit" class="btn btn-lg btn-success mb-1">
-                                    <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-                                    Light Layout
-                                </button> -->
                     </div>
                 </form>
                 <div v-if="user.id > 0" class="row">
@@ -149,9 +129,12 @@
                         return 0;
                     }
                     $.LoadingOverlay("show");
+                    if (this.$refs.picture.files.length == 0) {
+                        delete this.user.picture;
+                    }
                     if (this.user.id > 0) {
-                        this.user.__method = 'PUT';
-                        this.updateUserCall(this.user.id, this.user, this.createUserCallback);
+                        this.user._method = 'PUT';
+                        this.updateUserCall(this.jsonToFormData(this.user), this.user.id, this.createUserCallback);
                     } else {
                         this.createUserCall(this.jsonToFormData(this.user), this.createUserCallback);
                     }
@@ -190,6 +173,9 @@
                     this.user = response.data;
                     if (this.user.id > 0) {
                         $("#organizations-select").val(this.user.organization_id).trigger("change");
+                        if (this.user.picture) {
+                            $('.profile-pic').attr('src', '/storage/' + this.user.picture);
+                        }
                     }
                 } else {
                     if (Helpers.isAssoc(response.errors)) {
@@ -327,6 +313,24 @@
                 $('#organizations-select').on('select2:clear', function (e) {
                     self.user.organization_id = '';
                 });
+
+                var readURL = function (input) {
+                    if (input.files && input.files[0]) {
+                        self.user.picture = input.files[0];
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            $('.profile-pic').attr('src', e.target.result);
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                $(".file-upload").on('change', function () {
+                    readURL(this);
+                });
+                $(".upload-button").on('click', function () {
+                    $(".file-upload").click();
+                });
             });
         }
     }
@@ -354,5 +358,70 @@
     .select2-result-repository__description {
         font-size: 11px !important;
         text-overflow: ellipsis !important;
+    }
+</style>
+
+<style scoped>
+    .avatar-wrapper {
+        position: relative;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 1px 1px 15px -5px black;
+        transition: all .3s ease;
+    }
+
+    .avatar-wrapper:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .avatar-wrapper:hover .profile-pic {
+        opacity: .5;
+    }
+
+    .avatar-wrapper .profile-pic {
+        height: 100%;
+        width: 100%;
+        transition: all .3s ease;
+    }
+
+    .avatar-wrapper .profile-pic:after {
+        font-family: FontAwesome;
+        content: "\f007";
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        font-size: 150px;
+        background: #ecf0f1;
+        color: #34495e;
+        text-align: center;
+    }
+
+    .avatar-wrapper .upload-button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    .avatar-wrapper .upload-button .fa-arrow-circle-up {
+        position: absolute;
+        font-size: 169px;
+        top: -10px;
+        left: 2;
+        text-align: center;
+        opacity: 0;
+        -webkit-transition: all .3s ease;
+        transition: all .3s ease;
+        color: #34495e;
+    }
+
+    .avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+        opacity: .9;
     }
 </style>

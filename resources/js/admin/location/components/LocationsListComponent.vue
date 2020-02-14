@@ -40,7 +40,7 @@
                                 <tr v-for="(_location, index) in locations" :key="index">
                                     <td class="text-truncate">
                                         <div class="avatar avatar-md mr-1"><img
-                                                :src="_location.logo ? '/storage/' + _location.logo : '/admin/images/logo-placeholder.jpg'"
+                                                :src="_location.logo ? '/storage/' + _location.logo : '/admin/images/logo-placeholder-loc.png'"
                                                 alt="Generic placeholder image" class="rounded-circle"></div> <span
                                             class="text-truncate">{{_location.title}}</span>
                                     </td>

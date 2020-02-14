@@ -23,11 +23,11 @@ export default {
                 return callBackHandler(error);
             });
         },
-        updateUserCall(id, params, callBackHandler) {
+        updateUserCall(data, id, callBackHandler) {
             axios({
-                method: 'put',
+                method: 'post',
                 url: '/users/' + id,
-                data: params,
+                data: data,
             }).then(response => {
                 return callBackHandler(response.data);
             }).catch((error) => {

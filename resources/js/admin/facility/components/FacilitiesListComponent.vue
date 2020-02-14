@@ -40,7 +40,7 @@
                                 <tr v-for="(_facility, index) in facilities" :key="index">
                                     <td class="text-truncate">
                                         <div class="avatar avatar-md mr-1"><img
-                                                :src="_facility.logo ? '/storage/' + _facility.logo : '/admin/images/logo-placeholder.jpg'"
+                                                :src="_facility.logo ? '/storage/' + _facility.logo : '/admin/images/logo-placeholder-fac.png'"
                                                 alt="Generic placeholder image" class="rounded-circle"></div> <span
                                             class="text-truncate">{{_facility.title}}</span>
                                     </td>

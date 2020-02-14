@@ -53,6 +53,27 @@ export default {
             }).catch((error) => {
                 return callBackHandler(error);
             });
+        },
+        changePasswordCall(data, callBackHandler) {
+            axios({
+                method: 'post',
+                url: '/admins/change-password',
+                data: data
+            }).then(function (response) {
+                return callBackHandler(response.data);
+            }.bind(this)).catch(function (error) {
+                return callBackHandler(error.response);
+            });
+        },
+        removeAvatarCall(id, callBackHandler) {
+            axios({
+                method: 'get',
+                url: '/admins/remove-avatar/' + id,
+            }).then(function (response) {
+                return callBackHandler(response.data);
+            }.bind(this)).catch(function (error) {
+                return callBackHandler(error.response);
+            });
         }
     }
 }

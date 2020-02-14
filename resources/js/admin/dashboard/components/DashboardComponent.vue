@@ -548,18 +548,7 @@
             logOutCallback(response) {
                 $.LoadingOverlay("hide");
                 if (response.data.status == 1) {
-                    if (storage.get('token')) {
-                        storage.remove('token');
-                    }
-                    if (storage.get('refresh_token')) {
-                        storage.remove('refresh_token');
-                    }
-                    if (storage.get('token_type')) {
-                        storage.remove('token_type');
-                    }
-                    if (storage.get('expires_in')) {
-                        storage.remove('expires_in');
-                    }
+                    Auth.removeSession();
                     window.location.href = '/admin/login';
                 }
             },
@@ -573,7 +562,7 @@
                         created_at: 'DESC'
                     },
                     with: ['organization'],
-                    fields: ['id', 'first_name', 'last_name', 'organization_id', 'email'],
+                    fields: ['id', 'first_name', 'last_name', 'organization_id', 'email', 'picture'],
                 };
                 params['where'] = [];
                 this.getUsersCall(params, this.getUsersCallback);

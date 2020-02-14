@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Api;
 
+use App\Exceptions\AdminApiException;
 use App\Http\Controllers\ApiController;
 use App\Services\Admin;
 use App\Models\Admin as AdminModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends ApiController
 {
@@ -55,11 +58,9 @@ class AdminController extends ApiController
      */
     public function show($id)
     {
-        if ($id > 0) {
-            $admin = AdminModel::find($id);
-            if ($admin) {
-                return $this->respondData('Admin',  $admin);
-            }
+        $admin = $id > 0 ? AdminModel::find($id) : AdminModel::find(Auth::user()->id);
+        if ($admin) {
+            return $this->respondData('Admin',  $admin);
         }
         return $this->respondWithErrors(404, 'Admin not found');
     }
@@ -73,16 +74,15 @@ class AdminController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        if ($id > 0) {
-            $data = $request->all();
-            $data['id'] = $id;
-            $admin = $this->sAdmin->update($data);
-            if ($admin) {
-                return $this->respondData('Admin updated',  $admin);
-            }
-            return $this->respondWithErrors(500, 'Error updating the admin');
+        $data = $request->all();
+        $data['id'] = $id > 0 ? $id : Auth::user()->id;
+        $admin = $this->sAdmin->update($data);
+        if ($admin) {
+            return $this->respondData('Admin updated',  $admin);
+        } else {
+            return $this->respondWithErrors(404, 'Admin not found');
         }
-        return $this->respondWithErrors(404, 'Admin not found');
+        return $this->respondWithErrors(500, 'Error updating the admin');
     }
 
     /**
@@ -101,6 +101,42 @@ class AdminController extends ApiController
                 } else {
                     return $this->respondWithErrors(500, 'Error deleting the admin');
                 }
+            }
+        }
+        return $this->respondWithErrors(404, 'Admin not found');
+    }
+
+    public function changePassword(Request $request)
+    {
+        try{
+            $admin = $this->sAdmin->changePassword($request->all());
+            if ($admin) {
+                return $this->respondData("Password changed successfully", $admin);
+            }
+            return $this->respondWithErrors(500, 'Error updating password');
+            
+        } catch(AdminApiException $e){
+            return $this->respondWithErrors(422, $e->messages());
+        }
+    }
+
+    public function removeAvatar($id)
+    {
+        $admin = AdminModel::find($id);
+        if ($admin) {
+            if($admin->avatar != ''){
+                if(Storage::disk('public')->delete($admin->avatar)){
+                    $admin->avatar = null;
+                    if($admin->save()){
+                        return $this->respondData("Avatar removed successfully", $admin);
+                    } else {
+                        return $this->respondWithErrors(500, 'Error removing the avatar');
+                    }
+                } else {
+                    return $this->respondWithErrors(500, 'Error removing avatar file');
+                }
+            } else {
+                return $this->respondWithErrors(422, 'Avatar not found');
             }
         }
         return $this->respondWithErrors(404, 'Admin not found');

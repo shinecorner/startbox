@@ -15,7 +15,6 @@ class Admin extends Authenticatable
     use Notifiable;
     use HasApiTokens;
 
-    protected $guarded = ['id'];
     protected $hidden = ['password', 'remember_token'];
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 

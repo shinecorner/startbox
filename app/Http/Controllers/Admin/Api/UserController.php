@@ -57,11 +57,9 @@ class UserController extends ApiController
      */
     public function show($id)
     {
-        if ($id > 0) {
-            $user = UserModel::find($id);
-            if ($user) {
-                return $this->respondData('User',  $user);
-            }
+        $user = $id > 0 ? UserModel::find($id) : UserModel::find(Auth::user()->id);
+        if ($user) {
+            return $this->respondData('User',  $user);
         }
         return $this->respondWithErrors(404, 'User not found');
     }
@@ -75,16 +73,15 @@ class UserController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        if ($id > 0) {
-            $data = $request->all();
-            $data['id'] = $id;
-            $user = $this->sUser->update($data);
-            if ($user) {
-                return $this->respondData('User updated',  $user);
-            }
-            return $this->respondWithErrors(500, 'Error updating the user');
+        $data = $request->all();
+        $data['id'] = $id > 0 ? $id : Auth::user()->id;
+        $user = $this->sUser->update($data);
+        if ($user) {
+            return $this->respondData('User updated',  $user);
+        } else {
+            return $this->respondWithErrors(404, 'User not found');
         }
-        return $this->respondWithErrors(404, 'User not found');
+        return $this->respondWithErrors(500, 'Error updating the user');
     }
 
     /**

@@ -30,7 +30,7 @@ class Location extends AdminBase
             'description' => 'required|max:255',
             'organization_id' => 'required|integer',
             'facility_id' => 'required|integer',
-            'logo' => 'sometimes|required|image',
+            'logo' => 'sometimes|image',
             'longitude' => 'required',
             'latitude' => 'required',
         ]);

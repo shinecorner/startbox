@@ -30,15 +30,15 @@ Route::middleware('api-admin')->group(function () {
         Route::get('/logout', 'Api\AdminLoginController@logout');
     });
     
-
     //System-admins resource routes
     Route::apiResource('admins', 'Api\AdminController');
-    
-    //System-admins non resource routes
-   /*  Route::prefix('admins')->group(function () {
-        Route::post('/update/{id}', 'Api\AdminController@update');
-    }); */
 
+    //System-admins non resource routes
+    Route::prefix('admins')->group(function () {
+        Route::post('change-password', 'Api\AdminController@changePassword');
+        Route::get('remove-avatar/{id}', 'Api\AdminController@removeAvatar');
+    });
+    
     //Organizations non resource routes
     Route::prefix('organizations')->group(function () {
         Route::get('{organization_id}/facilities', 'Api\OrganizationController@organization_facilities');

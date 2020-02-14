@@ -225,11 +225,8 @@
                 if (t.logo) {
                     return "/storage/" + t.logo;
                 } else {
-                    return "/admin/images/logo-placeholder.jpg";
+                    return "/admin/images/logo-placeholder-fac.png";
                 }
-            },
-            handleFileUpload() {
-                this.location.logo = this.$refs.logo.files.length > 0 ? this.$refs.logo.files[0] : '';
             },
             buildFormData(formData, data, parentKey) {
                 var self = this;
@@ -329,7 +326,7 @@
                         return e;
                     },
                     templateSelection: function (t) {
-                        return t.text;
+                        return "<div class='avatar'><img src='" + self.getLogo(t) + "' /></div><span class='pl-2'>" + t.text + '</span>';
                     }
                 });
 

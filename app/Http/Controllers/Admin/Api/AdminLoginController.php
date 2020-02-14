@@ -76,7 +76,8 @@ class AdminLoginController extends ApiController
         $res = [
             'user' => [
                 'first_name' => $user->first_name,
-                'last_name' => $user->last_name
+                'last_name' => $user->last_name,
+                'avatar' => $user->avatar
             ],
             'auth' => [
                 'access_token' => $token_data->plainTextToken,

@@ -31,21 +31,22 @@
                                         class="message-error"><b>{{error_message.email}}</b></span>
                                 </div>
                             </div>
-                            <div class="col-md-3">
-                                <fieldset class="form-group">
-                                    <label>Avatar</label>
-                                    <div class="custom-file">
-                                        <input @change="handleFileUpload" type="file" id="picture" ref="picture"
-                                            class="custom-file-input">
-                                        <label class="custom-file-label" for="picture">Choose file</label>
-                                    </div>
-                                </fieldset>
-                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-12">
-                                <label v-if="admin.first_name">Full name: <b>{{admin.first_name}}
-                                        {{admin.last_name}}</b></label>
+                            <div class="col-md-3 pl-5">
+                                <fieldset class="form-group">
+                                    <div class="avatar-wrapper">
+                                        <img class="profile-pic" src="" />
+                                        <div class="upload-button">
+                                            <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                                        </div>
+                                        <input class="file-upload" type="file" accept="image/*" ref="picture" />
+                                    </div>
+                                    <div class="pt-2 pb-2">
+                                        <label v-show="admin.first_name">Full name: <b>{{admin.first_name}}
+                                                {{admin.last_name}}</b></label>
+                                    </div>
+                                </fieldset>
                             </div>
                         </div>
                     </div>
@@ -113,7 +114,7 @@
                         return 0;
                     }
                     $.LoadingOverlay("show");
-                    if (!this.admin.avatar) {
+                    if (this.$refs.picture.files.length == 0) {
                         delete this.admin.avatar;
                     }
                     if (this.admin.id > 0) {
@@ -136,6 +137,9 @@
             createAdminCallback(response) {
                 $.LoadingOverlay("hide");
                 if (response.code == 200) {
+                    /* if (this.admin.id > 0) {
+                        Auth.setUser({ first_name: response.data.first_name, last_name: response.data.last_name, avatar: response.data.avatar });
+                    } */
                     this.$router.push({ name: 'admins_list' });
                 } else {
                     if (Helpers.isAssoc(response.errors)) {
@@ -151,6 +155,9 @@
                 $.LoadingOverlay("hide");
                 if (response.code == 200) {
                     this.admin = response.data;
+                    if (this.admin.avatar) {
+                        $('.profile-pic').attr('src', '/storage/' + this.admin.avatar);
+                    }
                 } else {
                     if (Helpers.isAssoc(response.errors)) {
                         for (var key in response.errors) {
@@ -240,8 +247,25 @@
         },
         mounted() {
             Helpers.unBlockPage();
+            var self = this;
             this.$nextTick(function () {
+                var readURL = function (input) {
+                    if (input.files && input.files[0]) {
+                        self.admin.avatar = input.files[0];
+                        var reader = new FileReader();
 
+                        reader.onload = function (e) {
+                            $('.profile-pic').attr('src', e.target.result);
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+                $(".file-upload").on('change', function () {
+                    readURL(this);
+                });
+                $(".upload-button").on('click', function () {
+                    $(".file-upload").click();
+                });
             });
         }
     }
@@ -269,5 +293,70 @@
     .select2-result-repository__description {
         font-size: 11px !important;
         text-overflow: ellipsis !important;
+    }
+</style>
+
+<style scoped>
+    .avatar-wrapper {
+        position: relative;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 1px 1px 15px -5px black;
+        transition: all .3s ease;
+    }
+
+    .avatar-wrapper:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+
+    .avatar-wrapper:hover .profile-pic {
+        opacity: .5;
+    }
+
+    .avatar-wrapper .profile-pic {
+        height: 100%;
+        width: 100%;
+        transition: all .3s ease;
+    }
+
+    .avatar-wrapper .profile-pic:after {
+        font-family: FontAwesome;
+        content: "\f007";
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        font-size: 150px;
+        background: #ecf0f1;
+        color: #34495e;
+        text-align: center;
+    }
+
+    .avatar-wrapper .upload-button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    .avatar-wrapper .upload-button .fa-arrow-circle-up {
+        position: absolute;
+        font-size: 169px;
+        top: -10px;
+        left: 2;
+        text-align: center;
+        opacity: 0;
+        -webkit-transition: all .3s ease;
+        transition: all .3s ease;
+        color: #34495e;
+    }
+
+    .avatar-wrapper .upload-button:hover .fa-arrow-circle-up {
+        opacity: .9;
     }
 </style>

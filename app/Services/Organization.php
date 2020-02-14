@@ -28,7 +28,7 @@ class Organization extends AdminBase
         $validator = Validator::make($data, [
             'title' => 'required|max:255',
             'description' => 'required|max:255',
-            'logo' => 'sometimes|required|image'
+            'logo' => 'sometimes|image'
         ]);
         if ($validator->passes()) {
             $exiting_organization = OrganizationModel::where('title', $data['title'])->first();

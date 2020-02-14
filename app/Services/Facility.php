@@ -29,7 +29,7 @@ class Facility extends AdminBase
             'title' => 'required|max:255',
             'description' => 'required|max:255',
             'organization_id' => 'required|integer',
-            'logo' => 'sometimes|required|image',
+            'logo' => 'sometimes|image',
             'user' => 'required'
         ]);
         if ($validator->passes()) {

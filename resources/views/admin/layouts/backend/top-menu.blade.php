@@ -32,6 +32,7 @@
 			<top-nav-bar></top-nav-bar>
 		</div>
 	</div>
+	
 </nav>
 
 <!-- END: Header-->
